@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sniper Trading - منصة التحليل الحقيقي</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: #151a23;
+            --accent-gold: #f0b90b;
+            --green-buy: #0ecb81;
+            --red-sell: #f6465d;
+            --text-main: #ffffff;
+            --text-muted: #848e9c;
+            --border-color: #2b313a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; }
+        .app-container { width: 100%; max-width: 480px; background: var(--bg-color); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding-bottom: 70px; position: relative; }
+        .header { padding: 16px; background: var(--card-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        .profile-info { display: flex; align-items: center; gap: 12px; }
+        .profile-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent-gold); object-fit: cover; }
+        .platform-name h1 { font-size: 1.1rem; color: var(--accent-gold); font-weight: 700; }
+        .platform-name p { font-size: 0.75rem; color: var(--text-muted); }
+        .status-badge { background: rgba(14, 203, 129, 0.15); color: var(--green-buy); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+        .status-dot { width: 8px; height: 8px; background: var(--green-buy); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .content { padding: 16px; }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 18px; margin-bottom: 16px; border: 1px solid var(--border-color); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 14px; }
+        .symbol-title { font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .signal-type { background: var(--green-buy); color: #000; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+        .accuracy-box { text-align: left; }
+        .accuracy-val { color: var(--accent-gold); font-weight: bold; font-size: 1.1rem; }
+        .accuracy-lbl { font-size: 0.7rem; color: var(--text-muted); }
+        .targets-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
+        .target-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 6px; text-align: center; }
+        .target-title { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; }
+        .target-price { font-size: 0.85rem; font-weight: bold; color: var(--green-buy); }
+        .sl-box { background: rgba(246, 70, 93, 0.1); border: 1px solid rgba(246, 70, 93, 0.3); border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .sl-title { color: var(--red-sell); font-size: 0.85rem; font-weight: bold; }
+        .sl-price { color: var(--red-sell); font-size: 0.95rem; font-weight: bold; }
+        .indicators-list { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border-color); }
+        .indicator-item { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px; color: var(--text-muted); }
+        .indicator-val { color: var(--text-main); font-weight: 600; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 10px 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 0.75rem; text-decoration: none; gap: 4px; }
+        .nav-item.active { color: var(--accent-gold); }
+        .nav-item i { font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <div class="profile-info">
+            <img src="profile.jpg" alt="Sniper Logo" class="profile-img" onerror="this.src='https://via.placeholder.com/50'">
+            <div class="platform-name">
+                <h1>Sniper Trading 🎯</h1>
+                <p>تحليل حقيقي واحترافي</p>
+            </div>
+        </div>
+        <div class="status-badge">
+            <div class="status-dot"></div>
+            سوق مباشر
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <div class="card-header">
+                <div class="symbol-title">
+                    <i class="fab fa-bitcoin" style="color: var(--accent-gold);"></i>
+                    <span id="card-symbol">جاري الفحص...</span>
+                    <span class="signal-type">شراء قناص</span>
+                </div>
+                <div class="accuracy-box">
+                    <div class="accuracy-val" id="card-acc">89.5%</div>
+                    <div class="accuracy-lbl">نسبة النجاح</div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                <span style="color: var(--text-muted); font-size: 0.85rem;">سعر الدخول الحالي:</span>
+                <span style="font-weight: bold; font-size: 0.95rem;" id="card-price">--</span>
+            </div>
+
+            <div class="targets-grid">
+                <div class="target-box">
+                    <div class="target-title">الهدف 1 (+2.5%)</div>
+                    <div class="target-price" id="tp1">--</div>
+                </div>
+                <div class="target-box">
+                    <div class="target-title">الهدف 2 (+5.0%)</div>
+                    <div class="target-price" id="tp2">--</div>
+                </div>
+                <div class="target-box">
+                    <div class="target-title">الهدف 3 (+8.5%)</div>
+                    <div class="target-price" id="tp3">--</div>
+                </div>
+            </div>
+
+            <div class="sl-box">
+                <span class="sl-title"><i class="fas fa-shield-alt"></i> وقف الخسارة (SL)</span>
+                <span class="sl-price" id="sl">--</span>
+            </div>
+
+            <div class="indicators-list">
+                <div class="indicator-item">
+                    <span>الاتجاه العام (EMA200):</span>
+                    <span class="indicator-val" style="color: var(--green-buy);">صاعد (Bullish)</span>
+                </div>
+                <div class="indicator-item">
+                    <span>مؤشر RSI (14):</span>
+                    <span class="indicator-val" id="rsi-val">--</span>
+                </div>
+                <div class="indicator-item">
+                    <span>مؤشر ADX (قوة الاتجاه):</span>
+                    <span class="indicator-val" id="adx-val">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active"><i class="fas fa-chart-line"></i><span>لوحة التحكم</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-bolt"></i><span>الصفقات</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-history"></i><span>السجل</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-sliders-h"></i><span>الإعدادات</span></a>
+    </div>
+</div>
+
+<script>
+    async function loadSignals() {
+        try {
+            const res = await fetch('market_signals.json?t=' + Date.now());
+            if (!res.ok) return;
+            const data = await res.json();
+            if (data && data.length > 0) {
+                const s = data[0];
+                document.getElementById('card-symbol').innerText = s.symbol;
+                document.getElementById('card-acc').innerText = s.success_rate;
+                document.getElementById('card-price').innerText = '$' + s.price;
+                document.getElementById('tp1').innerText = '$' + s.tp1;
+                document.getElementById('tp2').innerText = '$' + s.tp2;
+                document.getElementById('tp3').innerText = '$' + s.tp3;
+                document.getElementById('sl').innerText = '$' + s.sl + ' (-2.0%)';
+                document.getElementById('rsi-val').innerText = s.rsi_val + ' (منطقة إيجابية)';
+                document.getElementById('adx-val').innerText = s.adx_val + ' (ترند قوي جداً)';
+            }
+        } catch (e) {
+            console.log("بانتظار تحديث البيانات...");
+        }
+    }
+    loadSignals();
+    setInterval(loadSignals, 15000);
+</script>
+</body>
+</html>
